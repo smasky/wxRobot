@@ -3,6 +3,8 @@ import re
 import requests
 import json
 import threading
+import datetime
+
 if_weather=False
 if_seven=False
 future=''
@@ -60,14 +62,26 @@ def weather(cityname):
     return today,future
 ################################
 def time_weather():
-    
+    '''
+        添加定时任务
+    '''
+    global timer
+    now = datetime.datetime.now()
+    target=datetime.timedelta(hours=6,minutes=0,seconds=0)
+    now_time=datetime.timedelta(hours=now.hour,minutes=now.minute,seconds=now.second)
+    print(target-now_time)
+    timer = threading.Timer(10.0, time_weather)
+    timer.start()
+
 
 
 
 itchat.auto_login(hotReload=True)
+timer = threading.Timer(10.0, time_weather)
+timer.start()
 #author=itchat.search_friends(name='小sky')[0]
 #author.send('1111')
 itchat.run()
-
+#time_weather()
 
 #result=weather('南京')
