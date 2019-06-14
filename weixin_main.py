@@ -9,6 +9,7 @@ if_weather=False
 if_seven=False
 future=''
 city_list={'南京':'1','兰溪':'2','巢湖':'3','杭州':'4'} #天气列表
+User=['小sky','Anne']
 @itchat.msg_register(itchat.content.TEXT)
 def text_reply(msg):
     global if_weather,future,if_seven
@@ -43,7 +44,7 @@ def text_reply(msg):
             lists+='%s:%s\n'%(key,value)
         msg.user.send('请回复下列数字')
         msg.user.send(lists)
-    
+
 
 def weather(cityname):
     '''
@@ -69,18 +70,22 @@ def time_weather():
     now = datetime.datetime.now()
     target=datetime.timedelta(hours=6,minutes=0,seconds=0)
     now_time=datetime.timedelta(hours=now.hour,minutes=now.minute,seconds=now.second)
-    print(target-now_time)
-    timer = threading.Timer(10.0, time_weather)
+    wait_time=(target-now_time).seconds
+    today,future=weather('南京')
+    for u in User:
+        author=itchat.search_friends(name=u)[0]
+        author.send(today)
+    timer = threading.Timer(wait_time, time_weather)
     timer.start()
 
 
-
-
 itchat.auto_login(hotReload=True)
+now = datetime.datetime.now()
+target=datetime.timedelta(hours=6,minutes=0,seconds=0)
+now_time=datetime.timedelta(hours=now.hour,minutes=now.minute,seconds=now.second)
+wait_time=(target-now_time).seconds
 timer = threading.Timer(10.0, time_weather)
 timer.start()
-#author=itchat.search_friends(name='小sky')[0]
-#author.send('1111')
 itchat.run()
 #time_weather()
 
